@@ -1,0 +1,119 @@
+version: '2'
+
+vars:
+  Dir:
+    sh: basename "$PWD"
+  Version:
+    sh: git rev-parse HEAD
+  Boulder:
+    sh: echo $GOPATH/src/github.com/letsencrypt/boulder
+
+tasks:
+  default:
+    cmds:
+      - task: run
+
+  run:
+    desc: Run the glorious app.
+    cmds:
+      - task: build
+      - ./bin/{{.Dir}}{{exeExt}}
+
+  clean:
+    desc: Cleanup the build artifacts.
+    cmds:
+      - echo "Cleaning ..."
+      - rm -rf bin/ *.html *.out | exit 0;
+
+  install:
+    desc: Install all dependencies.
+    cmds:
+      - echo "Installing Dependencies ..."
+      - go get -u github.com/tcnksm/ghr
+      - go get -u github.com/mitchellh/gox
+      - go get -u github.com/alecthomas/gometalinter
+      - go get -u github.com/kisielk/errcheck
+
+  test:
+    desc: Run all the go tests.
+    cmds:
+      - go test -v -race ./...
+
+  run/boulder:
+    desc: Integration test.
+    deps: [build]
+    cmds:
+      - docker run --ip 10.77.77.78 -p 8888:8888 -p 8080:5002 -p 8443:5001 -v $PWD/bin/outlaw_linux_amd64:/bin/outlaw --network boulder_bluenet golang:1.11.2 outlaw --acme-url http://boulder:4000/directory --mongo --mongo-endpoint mongo --mongo-username root --mongo-password example --mongo-auth-database admin --verbose --http-port 5002 --https-port 5001
+
+  cov:
+    desc: Generate test converage.
+    cmds:
+      - go test -v -cover -coverprofile=c.out
+      - go tool cover -html=c.out -o coverage.html
+
+  vet:
+    desc: Reports suspicious code.
+    cmds:
+      - go vet ./...
+
+  lint:
+    desc: Run all the linters.
+    cmds:
+      - gometalinter --disable-all --enable=errcheck --enable=vet --enable=vetshadow ./...
+
+  ci:
+    desc: Run it like Volkswagen.
+    cmds:
+      - task: test
+      - task: lint
+
+  gen-proto:
+    desc: Generate protobuf client/server & cmd
+    cmds:
+      - mkdir -p bin/gen
+      - mkdir -p bin/cli
+      - protoc --go_out=plugins=grpc:./proto --proto_path=proto proto/*.proto
+
+  build:
+    desc: Run all the go tests.
+    sources:
+      - ./*.go
+    generates:
+      - bin/*.{{exeExt}}
+    cmds:
+      - echo "Building ({{.Dir}}) ..."
+      - mkdir -p bin
+      - gox -output {{printf "bin/{{.Dir}}_{{.OS}}_{{.Arch}}"}} -ldflags "-X version.Version={{.Version}}" -os="linux" -os="darwin" -arch="386" -arch="amd64" ./
+      - go build -i -o bin/{{.Dir}}
+  
+  boulder/setup:
+    desc: Setup Boulder.
+    cmds:
+      - mkdir -p {{.Boulder}}
+      - git clone --depth 1 https://github.com/letsencrypt/boulder.git {{.Boulder}} 2> /dev/null \ || (cd {{.Boulder}}; git reset --hard HEAD && git pull -q)
+      - sed -i -e 's/--http01 ""/--http01 :5002/' {{.Boulder}}/test/startservers.py
+      - sed -i -e 's/test\/config$$/test\/config-next/' {{.Boulder}}/docker-compose.yml
+  
+  boulder/start:
+    desc: Start Boulder.
+    cmds:
+      - docker-compose -f {{.Boulder}}/docker-compose.yml run --use-aliases -e FAKE_DNS=10.77.77.78 --service-ports boulder ./start.py
+
+  boulder/stop:
+    desc: Stop Boulder.
+    cmds:
+      - docker-compose -f {{.Boulder}}/docker-compose.yml down 
+
+  docker:
+    desc: Build docker.
+    deps: [release]
+    cmds:
+      - docker build --build-arg BIN={{.Dir}} -t {{.Dir}}:latest .
+  
+  release:
+    desc: Release the glorious app.
+    deps: [clean, test, lint, cov]
+    generates:
+      - bin/*.{{exeExt}}
+    cmds:
+      - task: build

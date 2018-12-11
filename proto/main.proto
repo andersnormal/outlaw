@@ -1,0 +1,166 @@
+syntax = "proto3";
+
+import "http.proto";
+import "google/protobuf/timestamp.proto";
+
+package proto;
+
+service Outlaw {
+  // CreateDomain is creating a new domain.
+  rpc CreateDomain(CreateDomainRequest) returns(CreateDomainResponse);
+  // DeleteDomain is deleting a domain.
+  rpc DeleteDomain(DeleteDomainRequest) returns (DeleteDomainResponse);
+  // Create Redirect
+  rpc CreateRedirect(CreateRedirectRequest) returns (CreateRedirectResponse);
+  // GetDomain is fetching a domain.
+  rpc GetDomain(GetDomainRequest) returns (GetDomainResponse);
+  // ListDomains is listing domains.
+  rpc ListDomains(ListDomainsRequest) returns (ListDomainsResponse);
+}
+
+// Domain is representing a DNS Domain Name
+//
+// A domain is the name either full matched or wildcard matched
+// to be listen to evaluated for redirect.
+message Domain {
+  // Type of the domain matchment
+  enum Type {
+    FULL_MATCH = 0;
+    WILDCARD = 1;
+  }
+
+  // The uuid of the domain
+  string uuid = 1;
+
+  // The name of the domain
+  string name = 2;
+  
+  // A description of the domain
+  string description = 3;
+  
+  // The type of the domain matchment.
+  Type type = 4;
+
+  // Redirects to be executed for the domain
+  repeated Redirect redirects = 5;
+
+  // Time this domain is created
+  google.protobuf.Timestamp created = 6;
+
+  // Time this domain has been modified
+  google.protobuf.Timestamp modified = 7;
+}
+
+// Redirect is representing a domain redirect
+//
+// A redirect is specifying a matched, or wildcard matched 
+// redirect of a request to new destition.
+message Redirect {
+  // UUID
+  string uuid = 1;
+
+  // Name of the redirect
+  string name = 2;
+
+  // A description of the redirect
+  string description = 3;
+
+  // Match specificies a url to be matched against
+  message Match {
+    // Type of the redirect matchment
+    enum Type {
+      FULL_MATCH = 0;
+      WILDCARD = 1;
+    }
+
+    // The path to be matched against.
+    // Could also be "*"
+    string path = 1;
+
+    // The type of the redirect
+    Type type = 2;
+  }
+
+  // Target specificies the target to redirect to
+  message Target {
+    // Url of the target
+    string url = 1;
+
+    // Transport of the parameters
+    bool parameters = 2;
+
+    // HTTP status code to return
+    HTTPStatusCode code = 4;
+  }
+
+  // Match specifies the match for a redirect
+  Match  match = 4;
+
+  // Target specifies the target of a redirect
+  Target target = 5;
+}
+
+// Request message for CreateDomain
+message CreateDomainRequest {
+  // The domain to create.
+  Domain domain = 1;
+}
+
+// Response message for CreateDomain
+message CreateDomainResponse {
+  // The domain to create.
+  Domain domain = 1;
+}
+
+// Request message for DeleteDomain
+message DeleteDomainRequest {
+  // The domain to create.
+  Domain domain = 1;
+}
+
+// Response message for DeleteDomain
+message DeleteDomainResponse {
+  // The domain to create.
+  Domain domain = 1;
+}
+
+// Request message for CreateRedirect
+message CreateRedirectRequest {
+  // The domain the redirects to create for.
+  Domain domain = 1;
+
+  // The redirects to create.
+  repeated Redirect redirects = 2;
+}
+
+// Response message for CreateRedirect
+message CreateRedirectResponse {
+  // The domain the redirects are created for.
+  Domain domain = 1;
+
+  // The redirects that is created.
+  repeated Redirect redirects = 2;
+}
+
+// Request message for ListDomains
+message ListDomainsRequest {
+
+}
+
+// Response message for ListDomains
+message ListDomainsResponse {
+  // The redirects that is created.
+  repeated Domain domains = 1;
+}
+
+// Request message for GetDomain
+message GetDomainRequest {
+  // The domain to request.
+  Domain domain = 1;
+}
+
+// Response message for GetDomain
+message GetDomainResponse {
+  // The domain to request.
+  Domain domain = 1;
+}
