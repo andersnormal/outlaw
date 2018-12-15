@@ -89,8 +89,8 @@ tasks:
   boulder/setup:
     desc: Setup Boulder.
     cmds:
-      - mkdir -p {{.Boulder}}
-      - git clone --depth 1 https://github.com/letsencrypt/boulder.git {{.Boulder}} 2> /dev/null \ || (cd {{.Boulder}}; git reset --hard HEAD && git pull -q)
+      - rm -rf {{.Boulder}}
+      - git clone --depth 1 https://github.com/letsencrypt/boulder.git {{.Boulder}} 2> /dev/null
       - sed -i -e 's/--http01 ""/--http01 :5002/' {{.Boulder}}/test/startservers.py
       - sed -i -e 's/test\/config$$/test\/config-next/' {{.Boulder}}/docker-compose.yml
   

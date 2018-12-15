@@ -58,7 +58,7 @@ var CreateDomain = &cobra.Command{
 		if url != "" {
 			m := &pb.Redirect_Match{
 				Path: path,
-				Type: pb.Redirect_Match_FULL_MATCH,
+				Type: pb.Redirect_Match_WILDCARD,
 			}
 
 			t := &pb.Redirect_Target{
