@@ -37,7 +37,6 @@ deploy:
   - bin/outlaw_darwin_amd64
   - bin/outlaw_linux_386
   - bin/outlaw_linux_amd64
-  - bin/outlaw
   - bin/cli_darwin_386
   - bin/cli_darwin_amd64
   - bin/cli_linux_386
