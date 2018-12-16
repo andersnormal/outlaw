@@ -22,7 +22,7 @@ install:
 - go get -t ./...
 script:
 - export PATH=$PATH:$HOME/gopath/bin
-- env GO111MODULE=on if [ "${LATEST}" = "true" ]; then task build; fi
+- if [ "${LATEST}" = "true" ]; then env GO111MODULE=on task build; fi
 notifications:
   slack:
     on_success: always
