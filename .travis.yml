@@ -17,6 +17,7 @@ cache:
 install:
 - env GO111MODULE=on go install . ./cmd/...
 - env GO111MODULE=off go get -u github.com/alecthomas/gometalinter
+- env GO111MODULE=off go get -u github.com/mitchellh/gox
 - env GO111MODULE=off gometalinter --install
 - env GO111MODULE=off go get -u github.com/go-task/task/cmd/task
 - go get -t ./...
