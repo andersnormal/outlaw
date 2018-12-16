@@ -6,9 +6,6 @@ matrix:
   - go: tip
   allow_failures:
   - go: tip
-branches:
-  only:
-  - master
 cache:
   directories:
   - "$GOPATH/src"
