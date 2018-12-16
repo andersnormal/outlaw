@@ -15,6 +15,16 @@ Databases
 * DynamoDB (coming soon)
 * more coming soon...
 
+## Client
+
+Outlaw includes a [gRPC](https://grpc.io) client to control the server.
+
+## Docker
+
+```
+docker run andersnormal/outlaw:1.0.0-beta.0 --mongo --mongo-endpoint mongo --mongo-username root --mongo-password example --mongo-auth-database admin --verbose
+```
+
 ## Staging
 
 Before moving to production it is recommended to test in the [Staging Environment](https://acme-staging.api.letsencrypt.org/directory) of [Let's Encrypt](https://letsencrypt.org). The URL for the Staging ACME V1 Environment can be set via `--acme-url https://letsencrypt.org`.
