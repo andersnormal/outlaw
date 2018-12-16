@@ -1,7 +1,7 @@
 package cmd
 
 import (
-	"github.com/andersnormal/outlaw/provider/dynamodb"
+	// "github.com/andersnormal/outlaw/provider/dynamodb"
 	"github.com/andersnormal/outlaw/provider/mongo"
 
 	"github.com/andersnormal/lru"
@@ -21,8 +21,8 @@ func preRunE(cmd *cobra.Command, args []string) error {
 	switch {
 	case cfg.Mongo.Enable:
 		cfg.Provider, err = mongo.NewMongo(cfg, l)
-	case cfg.DynamoDB.Enable:
-		cfg.Provider, err = dynamodb.NewDynamoDB(cfg)
+	// case cfg.DynamoDB.Enable:
+	// 	cfg.Provider, err = dynamodb.NewDynamoDB(cfg)
 	default:
 		return ErrNoProvider
 	}

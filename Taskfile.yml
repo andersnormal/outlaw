@@ -16,8 +16,8 @@ tasks:
   run:
     desc: Run the glorious app.
     cmds:
-      - task: build
-      - ./bin/{{.Dir}}{{exeExt}}
+      - task: build/server
+      - ./bin/{{.Dir}}_server_{{exeExt}}
 
   clean:
     desc: Cleanup the build artifacts.
@@ -75,7 +75,27 @@ tasks:
       - protoc --go_out=plugins=grpc:./proto --proto_path=proto proto/*.proto
 
   build:
-    desc: Run all the go tests.
+    desc: Builds all binaries.
+    generates:
+      - bin/*.{{exeExt}}
+    cmds:
+      - task: build/server
+      - task: build/client
+
+  build/client:
+    desc: Build client binaries.
+    sources:
+      - ./*.go
+    generates:
+      - bin/*.{{exeExt}}
+    cmds:
+      - echo "Building ({{.Dir}}) ..."
+      - mkdir -p bin
+      - gox -output {{printf "bin/{{.Dir}}_{{.OS}}_{{.Arch}}"}} -ldflags "-X version.Version={{.Version}}" -os="linux" -os="darwin" -arch="386" -arch="amd64" ./cli
+      - go build -i -o bin/{{.Dir}}
+
+  build/server:
+    desc: Build server binaries.
     sources:
       - ./*.go
     generates:
@@ -112,7 +132,7 @@ tasks:
   
   release:
     desc: Release the glorious app.
-    deps: [clean, test, lint, cov]
+    deps: [clean]
     generates:
       - bin/*.{{exeExt}}
     cmds:
