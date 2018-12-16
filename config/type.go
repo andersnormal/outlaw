@@ -8,7 +8,7 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-// Config contains a configuration for Voskhod
+// Config contains a configuration for outlaw
 type Config struct {
 	// Verbose toggles the verbosity
 	Verbose bool
