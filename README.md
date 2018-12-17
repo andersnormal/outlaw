@@ -19,10 +19,30 @@ Databases
 
 Outlaw includes a [gRPC](https://grpc.io) client to control the server.
 
+
+## Setup
+
+Outlaw needs to setup the various backends to work with it. In the case of MongoDB it needs to create the needed collections.
+
+```
+# Example
+docker run andersnormal/outlaw:1.0.0-beta.0 bootstrap --mongo --mongo-username root --mongo-password example --mongo-auth-database admin --verbose
+
+```
+
 ## Docker
 
 ```
 docker run andersnormal/outlaw:1.0.0-beta.0 --mongo --mongo-endpoint mongo --mongo-username root --mongo-password example --mongo-auth-database admin --verbose
+```
+
+## Help
+
+Outlaw provides help for all commands and subcommands and its various options. It should be easy to configure Outlaw for your specific setup.
+
+```
+# Example
+docker run andersnormal/outlaw:1.0.0-beta.0 --help
 ```
 
 ## Staging
@@ -36,4 +56,7 @@ Before moving to production it is recommended to test in the [Staging Environmen
 ```
  ./bin/outlaw --dynamodb --http-port 5002 --https-port 5001 --acme-url http://localhost:4000/directory --verbose
 ```
+
+## License
+[Apache 2.0](/LICENSE)
 
