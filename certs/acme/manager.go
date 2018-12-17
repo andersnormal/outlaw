@@ -66,14 +66,6 @@ func (a *AcmeManager) ServeHTTP(fallback http.Handler, w http.ResponseWriter, r 
 	a.manager.HTTPHandler(fallback).ServeHTTP(w, r)
 }
 
-// GetDomain by name
-// func (a *AcmeManager) GetDomain(host string) (*pb.Domain, error) {
-// 	// if domain, found := m.CertCache.IsDomainAcceptable(host); found {
-// 	// 	return domain, nil
-// 	// }
-// 	return nil, errHostNotConfigured
-// }
-
 // TLSConfig
 func (a *AcmeManager) TLSConfig() *tls.Config {
 	// use autocert config

@@ -2,6 +2,7 @@ package mongo
 
 import (
 	"context"
+	"strings"
 	"time"
 
 	"github.com/andersnormal/outlaw/config"
@@ -68,7 +69,8 @@ func (d *Mongo) Bootstrap(ctx context.Context) error {
 	}
 
 	for c, info := range cols {
-		if err := d.db().C(c).Create(info); err != nil {
+		if err := d.db().C(c).Create(info); err != nil &&
+			!strings.Contains(err.Error(), "already exists") {
 			return err
 		}
 	}

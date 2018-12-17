@@ -43,7 +43,7 @@ tasks:
     desc: Integration test.
     deps: [build]
     cmds:
-      - docker run --ip 10.77.77.78 -p 8888:8888 -p 8080:5002 -p 8443:5001 -v $PWD/bin/outlaw_linux_amd64:/bin/outlaw --network boulder_bluenet golang:1.11.2 outlaw --acme-url http://boulder:4000/directory --mongo --mongo-endpoint mongo --mongo-username root --mongo-password example --mongo-auth-database admin --verbose --http-port 5002 --https-port 5001
+      - docker run --ip 10.77.77.78 -p 8888:8888 -p 8080:5002 -p 8443:5001 -v $PWD/bin/outlaw_linux_amd64:/bin/outlaw --network boulder_bluenet golang:1.11.2 outlaw --acme-url http://boulder:4000/directory --bootstrap --mongo --mongo-endpoint mongo --mongo-username root --mongo-password example --mongo-auth-database admin --verbose --http-port 5002 --https-port 5001
 
   cov:
     desc: Generate test converage.

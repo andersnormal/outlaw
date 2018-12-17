@@ -28,6 +28,9 @@ type Config struct {
 	// Timeout of the runtime
 	Timeout time.Duration
 
+	// Bootstrap
+	Bootstrap bool
+
 	// DomainsTableName is the name of the database table
 	DomainsTableName string
 

@@ -32,4 +32,7 @@ func addFlags(cmd *cobra.Command, cfg *config.Config) {
 
 	// Cache size to use
 	cmd.Flags().IntVar(&cfg.CacheSize, "cache", config.DefaultCacheSize, "cache size")
+
+	// Bootstrap the database upon launch
+	cmd.Flags().BoolVar(&cfg.Bootstrap, "bootstrap", config.DefaultBootstrap, "bootstrap database upon start")
 }

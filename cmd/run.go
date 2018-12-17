@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"context"
+	"fmt"
 	"os"
 
 	"github.com/andersnormal/outlaw/cache"
@@ -9,6 +10,7 @@ import (
 	"github.com/andersnormal/outlaw/certs/acme"
 	server "github.com/andersnormal/outlaw/run"
 
+	// "github.com/globalsign/mgo"
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 )
@@ -28,6 +30,14 @@ func runE(cmd *cobra.Command, args []string) error {
 	// create root context
 	root.ctx, root.cancel = context.WithCancel(context.Background())
 	defer root.cancel()
+
+	// bootstrap database
+	if cfg.Bootstrap {
+		if err := bootstrapRunE(cmd, args); err != nil {
+			fmt.Println(err)
+			return err
+		}
+	}
 
 	// watch syscalls and cancel upon need
 	go root.watchSignals(cfg)

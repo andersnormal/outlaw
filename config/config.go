@@ -60,6 +60,9 @@ const (
 
 	// DefaultCacheTTL (1min)
 	DefaultCacheTTL = int64((5 * time.Second) / time.Nanosecond)
+
+	// DefaultBootstrap
+	DefaultBootstrap = false
 )
 
 // New returns a new Config
@@ -82,6 +85,7 @@ func New() *Config {
 		AcmeSkipTLS:      DefaultAcmeSkipTLS,
 		CacheSize:        DefaultCacheSize,
 		CacheTTL:         DefaultCacheTTL,
+		Bootstrap:        DefaultBootstrap,
 	}
 }
 

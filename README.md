@@ -30,6 +30,8 @@ docker run andersnormal/outlaw:1.0.0-beta.0 bootstrap --mongo --mongo-username r
 
 ```
 
+You can also use the `--bootstrap` option to do the bootstrap upon the start of Outlaw.
+
 ## Docker
 
 ```
